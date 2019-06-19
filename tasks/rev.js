@@ -26,8 +26,11 @@ module.exports = function(grunt) {
     var options = this.options({
       encoding: 'utf8',
       algorithm: 'md5',
-      length: 8
+      length: 8,
+      jsonOutputPath: false
     });
+
+    var json = {};
 
     this.files.forEach(function(filePair) {
       filePair.src.forEach(function(f) {
@@ -39,10 +42,14 @@ module.exports = function(grunt) {
 
         grunt.verbose.ok().ok(hash);
         fs.renameSync(f, outPath);
+        json[f] = renamed;
         grunt.log.write(f + ' ').ok(renamed);
-
       });
     });
+
+    if (options.jsonOutputPath) {
+      grunt.file.write(options.jsonOutputPath, JSON.stringify(json));
+    }
 
   });
 
